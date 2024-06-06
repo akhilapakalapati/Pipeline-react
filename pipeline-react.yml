@@ -1,0 +1,34 @@
+trigger:
+  branches:
+    include:
+    - '*'
+jobs:
+- job: Build
+  pool:
+    vmImage: 'ubuntu-latest'
+
+  steps:
+  - task: JavaToolInstaller@0
+    inputs:
+      versionSpec: '17'
+      jdkArchitectureOption: 'x64'
+      jdkSourceOption: 'PreInstalled'
+
+  - script: echo "Setting JAVA_HOME to JDK 17 location."
+    displayName: 'Set JAVA_HOME to JDK 17'
+
+  - script: |
+      java -version
+      echo "JVM: $(java -version)"
+    displayName: 'Check Java Version'
+
+  - script: echo "##vso[task.setvariable variable=ComponentVersion]$(./gradlew -q :printVersion)"
+    displayName: 'Get Component Version'
+
+  - script: chmod +x gradlew  # Grant execute permission to gradlew
+    displayName: 'Grant Execute Permission to gradlew'
+
+  - script: |
+      ./gradlew clean build
+    displayName: 'Build with Gradle'
+
