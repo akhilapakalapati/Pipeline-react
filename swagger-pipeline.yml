@@ -3,7 +3,7 @@ name: Deploy API Docs
 on:
   push:
     branches:
-      - main
+      - '*'
 
 jobs:
   build:
@@ -24,4 +24,3 @@ jobs:
     - name: Deploy Docs
       run: |
         ./scripts/deploy-docs.sh
-
